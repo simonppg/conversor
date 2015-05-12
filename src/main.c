@@ -21,5 +21,6 @@ void miFuncion()
 {
 	printf("Agregando nuevas caracteristicas");
 	printf("Agregando una mas");
-	printf("otra");dvsd
+	printf("otra");
+	printf("Nueva feature desde vct");
 }
