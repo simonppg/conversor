@@ -14,4 +14,5 @@ void miFuncion()
 {
 	printf("Agregando nuevas caracteristicas");
 	printf("Agregando una mas");
+	printf("otra");
 }
