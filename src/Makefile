@@ -16,7 +16,7 @@ BIN_DIR 	:=	bin
 CC = gcc
 CFLAGS = -c -Wall -g -Os
 LD = $(CC)
-LDFLAGS = -lfoo
+LDFLAGS = 
 
 TARGET = MyProject
 
@@ -26,10 +26,8 @@ all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
 	$(MAKE) -C $(CODE_DIR)
-	$(LD) -o $@ $^ $(LDFLAGS)
+	$(LD) -o ../$(BIN_DIR)/$@ ../$(BUILD_DIR)/$^ $(LDFLAGS)
 
-# You don't even need to be explicit here,
-# compiling C files is handled automagically by Make.
 %.o: %.c
 	$(CC) $(CFLAGS) $^ -o ../$(BUILD_DIR)/$@ 
 
