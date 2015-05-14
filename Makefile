@@ -1,18 +1,36 @@
-export PROJECT_DIR   	:=	$(shell pwd)
-CODE_DIR 		:= 	src
-OBJDIR 			:= 	build \
-				bin
+CC        := gcc
+LD        := gcc
 
-.PHONY: build_project
+MODULES   := test frecuencia
+#MODULES   := $(sort $(dir $(wildcard src/*/)))
+SRC_DIR   := $(addprefix src/,$(MODULES))
+BUILD_DIR := $(addprefix build/,$(MODULES))
 
-all: $(OBJDIR) build_project
+SRC       := $(foreach sdir,$(SRC_DIR),$(wildcard $(sdir)/*.c))
+OBJ       := $(patsubst src/%.c,build/%.o,$(SRC))
+INCLUDES  := $(addprefix -I,$(SRC_DIR))
 
-$(OBJDIR):
-	mkdir -pv $@
+vpath %.c $(SRC_DIR)
 
-build_project:
-	$(MAKE) -C $(CODE_DIR)
+define make-goal
+$1/%.o: %.c
+	$(CC) $(INCLUDES) -c $$< -o $$@
+endef
+
+.PHONY: all checkdirs clean
+
+all: checkdirs build/test.exe
+
+build/test.exe: $(OBJ) $(OBJECTS)
+	$(MODULES)
+	$(LD) $^ -o $@
+
+checkdirs: $(BUILD_DIR)
+
+$(BUILD_DIR):
+	@mkdir -p $@
 
 clean:
-	rm -r bin
-	rm -r build
+	@rm -rf $(BUILD_DIR)
+
+$(foreach bdir,$(BUILD_DIR),$(eval $(call make-goal,$(bdir))))
