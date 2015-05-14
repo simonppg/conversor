@@ -1,19 +1,8 @@
-CODE_DIR 	:= 	frecuencia 	#falta optimisar esto
+CODE_DIR 	:= 	frecuencia
 BUILD_DIR 	:= 	build
 BIN_DIR 	:=	bin
 
-#SRCS=$(wildcard *.c)
-
-#OBJS=$(SRCS:.c=.o)
-
-#all: test
-
-#test: $(OBJS)
-#	cc -c test.c $(OBJS) -o ../$(BUILD_DIR)/test.o
-
-
-
-CC = gcc
+CC = cc
 CFLAGS = -c -Wall -g -Os
 LD = $(CC)
 LDFLAGS = 
@@ -26,12 +15,10 @@ all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
 	$(MAKE) -C $(CODE_DIR)
-	$(LD) -o ../$(BIN_DIR)/$@ ../$(BUILD_DIR)/$^ $(LDFLAGS)
+	$(LD) -o $(PROJECT_DIR)/$(BIN_DIR)/$@ $(PROJECT_DIR)/$(BUILD_DIR)/$^ $(LDFLAGS)
 
 %.o: %.c
-	$(CC) $(CFLAGS) $^ -o ../$(BUILD_DIR)/$@ 
-
-#optimisar esto
+	$(CC) $(CFLAGS) $^ -o $(PROJECT_DIR)/$(BUILD_DIR)/$@ 
 
 clean:
 	rm $(TARGET) $(OBJECTS)

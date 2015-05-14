@@ -1,14 +1,14 @@
-CODE_DIR 	:= 	src
-OBJDIR 		:= 	build \
+export PROJECT_DIR   	:=	$(shell pwd)
+CODE_DIR 		:= 	src
+OBJDIR 			:= 	build \
 				bin
-PROJECT_DIR :=	.
 
 .PHONY: build_project
 
 all: $(OBJDIR) build_project
 
 $(OBJDIR):
-	mkdir -p $@
+	mkdir -pv $@
 
 build_project:
 	$(MAKE) -C $(CODE_DIR)
