@@ -15,10 +15,11 @@ DEPEXT      := d
 OBJEXT      := o
 
 #Flags, Libraries and Includes
-CFLAGS      := -Wall -O3 -g
+CFLAGS      := -Wall -g
 LIB         := -lm
 INC         := -I$(INCDIR) -I/usr/local/include
 INCDEP      := -I$(INCDIR)
+
 
 #---------------------------------------------------------------------------------
 #DO NOT EDIT BELOW THIS LINE
