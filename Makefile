@@ -32,6 +32,7 @@ $(BUILD_DIR):
 
 clean:
 	@rm -rf $(BUILD_DIR)
-	@rm -f bin/*.out
+	@rm -rf bin/*.out
+	@rm -rf build
 
 $(foreach bdir,$(BUILD_DIR),$(eval $(call make-goal,$(bdir))))
