@@ -1,38 +1,70 @@
-CC        	:= gcc
-LD        	:= gcc
+#Compiler and Linker
+CC          := cc
 
-#MODULES	:= test frecuencia
-MODULES   	:= $(shell ls src)
-SRC_DIR	   	:= $(addprefix src/,$(MODULES))
-BUILD_DIR 	:= $(addprefix build/,$(MODULES)) bin
-INC_DIR   	:= $(addprefix include/,$(MODULES))
+#The Target Binary Program
+TARGET      := program
 
-SRC       	:= $(foreach sdir,$(SRC_DIR),$(wildcard $(sdir)/*.c))
-OBJ       	:= $(patsubst src/%.c,build/%.o,$(SRC))
-INCLUDES  	:= -Iinclude $(addprefix -I,$(INC_DIR))
+#The Directories, Source, Includes, Objects, Binary and Resources
+SRCDIR      := src
+INCDIR      := include
+BUILDDIR    := obj
+TARGETDIR   := bin
+RESDIR      := res
+SRCEXT      := c
+DEPEXT      := d
+OBJEXT      := o
 
-vpath %.c $(SRC_DIR)
+#Flags, Libraries and Includes
+CFLAGS      := -Wall -O3 -g
+LIB         := -lm
+INC         := -I$(INCDIR) -I/usr/local/include
+INCDEP      := -I$(INCDIR)
 
-define make-goal
-$1/%.o: %.c
-	$(CC) $(INCLUDES) -c $$< -o $$@
-endef
+#---------------------------------------------------------------------------------
+#DO NOT EDIT BELOW THIS LINE
+#---------------------------------------------------------------------------------
+SOURCES     := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
+OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
 
-.PHONY: all checkdirs clean
+#Defauilt Make
+all: resources $(TARGET)
 
-all: checkdirs bin/test.out
+#Remake
+remake: cleaner all
 
-bin/test.out: $(OBJ)
-	$(LD) $^ -o $@
+#Copy Resources from Resources Directory to Target Directory
+resources: directories
+	@cp $(RESDIR)/* $(TARGETDIR)/
 
-checkdirs: $(BUILD_DIR)
+#Make the Directories
+directories:
+	@mkdir -p $(TARGETDIR)
+	@mkdir -p $(BUILDDIR)
 
-$(BUILD_DIR):
-	@mkdir -p $@
-
+#Clean only Objecst
 clean:
-	@rm -rf $(BUILD_DIR)
-	@rm -rf bin/*.out
-	@rm -rf build
+	@$(RM) -rf $(BUILDDIR)
 
-$(foreach bdir,$(BUILD_DIR),$(eval $(call make-goal,$(bdir))))
+#Full Clean, Objects and Binaries
+cleaner: clean
+	@$(RM) -rf $(TARGETDIR)
+
+#Pull in dependency info for *existing* .o files
+-include $(OBJECTS:.$(OBJEXT)=.$(DEPEXT))
+
+#Link
+$(TARGET): $(OBJECTS)
+	$(CC) $(LIB) -o $(TARGETDIR)/$(TARGET) $^
+
+#Compile
+$(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INC) -c -o $@ $<
+	@$(CC) $(CFLAGS) $(INCDEP) -MM $(SRCDIR)/$*.$(SRCEXT) > $(BUILDDIR)/$*.$(DEPEXT)
+	@cp -f $(BUILDDIR)/$*.$(DEPEXT) $(BUILDDIR)/$*.$(DEPEXT).tmp
+	@sed -e 's|.*:|$(BUILDDIR)/$*.$(OBJEXT):|' < $(BUILDDIR)/$*.$(DEPEXT).tmp > $(BUILDDIR)/$*.$(DEPEXT)
+	@sed -e 's/.*://' -e 's/\\$$//' < $(BUILDDIR)/$*.$(DEPEXT).tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(BUILDDIR)/$*.$(DEPEXT)
+	@rm -f $(BUILDDIR)/$*.$(DEPEXT).tmp
+
+#Non-File Targets
+.PHONY: all remake clean cleaner resources
