@@ -1,14 +1,14 @@
-CC        := gcc
-LD        := gcc
+CC        	:= gcc
+LD        	:= gcc
 
-MODULES   := test frecuencia
-#MODULES   := $(sort $(dir $(wildcard src/*/)))
-SRC_DIR   := $(addprefix src/,$(MODULES))
-BUILD_DIR := $(addprefix build/,$(MODULES))
+#MODULES	:= test frecuencia
+MODULES   	:= $(shell ls src)
+SRC_DIR	   	:= $(addprefix src/,$(MODULES))
+BUILD_DIR 	:= $(addprefix build/,$(MODULES)) bin
 
-SRC       := $(foreach sdir,$(SRC_DIR),$(wildcard $(sdir)/*.c))
-OBJ       := $(patsubst src/%.c,build/%.o,$(SRC))
-INCLUDES  := $(addprefix -I,$(SRC_DIR))
+SRC       	:= $(foreach sdir,$(SRC_DIR),$(wildcard $(sdir)/*.c))
+OBJ       	:= $(patsubst src/%.c,build/%.o,$(SRC))
+INCLUDES  	:= $(patsubst  src/%, -Isrc/%/include, $(SRC_DIR))
 
 vpath %.c $(SRC_DIR)
 
@@ -19,10 +19,9 @@ endef
 
 .PHONY: all checkdirs clean
 
-all: checkdirs build/test.exe
+all: checkdirs bin/test.out
 
-build/test.exe: $(OBJ) $(OBJECTS)
-	$(MODULES)
+bin/test.out: $(OBJ)
 	$(LD) $^ -o $@
 
 checkdirs: $(BUILD_DIR)
@@ -32,5 +31,6 @@ $(BUILD_DIR):
 
 clean:
 	@rm -rf $(BUILD_DIR)
+	@rm -f bin/*.out
 
 $(foreach bdir,$(BUILD_DIR),$(eval $(call make-goal,$(bdir))))
