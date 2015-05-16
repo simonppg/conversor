@@ -5,10 +5,11 @@ LD        	:= gcc
 MODULES   	:= $(shell ls src)
 SRC_DIR	   	:= $(addprefix src/,$(MODULES))
 BUILD_DIR 	:= $(addprefix build/,$(MODULES)) bin
+INC_DIR   	:= $(addprefix include/,$(MODULES))
 
 SRC       	:= $(foreach sdir,$(SRC_DIR),$(wildcard $(sdir)/*.c))
 OBJ       	:= $(patsubst src/%.c,build/%.o,$(SRC))
-INCLUDES  	:= $(patsubst  src/%, -Isrc/%/include, $(SRC_DIR))
+INCLUDES  	:= -Iinclude $(addprefix -I,$(INC_DIR))
 
 vpath %.c $(SRC_DIR)
 
