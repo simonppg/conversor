@@ -13,19 +13,20 @@ RESDIR      := res
 SRCEXT      := c
 DEPEXT      := d
 OBJEXT      := o
+RMEXT		:= mk
 
 #Flags, Libraries and Includes
 CFLAGS      := -Wall -g
-LIB         := -lm
+LIB         := 
 INC         := -I$(INCDIR) -I/usr/local/include
 INCDEP      := -I$(INCDIR)
-
 
 #---------------------------------------------------------------------------------
 #DO NOT EDIT BELOW THIS LINE
 #---------------------------------------------------------------------------------
 SOURCES     := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
+M_RULES		:= $(shell find $(SRCDIR) -type f -name *.$(RMEXT))
 
 #Defauilt Make
 all: resources $(TARGET)
@@ -53,14 +54,16 @@ cleaner: clean
 #Pull in dependency info for *existing* .o files
 -include $(OBJECTS:.$(OBJEXT)=.$(DEPEXT))
 
+-include $(M_RULES)
+
 #Link
 $(TARGET): $(OBJECTS)
-	$(CC) $(LIB) -o $(TARGETDIR)/$(TARGET) $^
+	$(CC) -o $(TARGETDIR)/$(TARGET) $^ $(LIB)
 
 #Compile
 $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INC) -c -o $@ $<
+	$(CC) $(CFLAGS) $(INC) -c -o $@ $< 
 	@$(CC) $(CFLAGS) $(INCDEP) -MM $(SRCDIR)/$*.$(SRCEXT) > $(BUILDDIR)/$*.$(DEPEXT)
 	@cp -f $(BUILDDIR)/$*.$(DEPEXT) $(BUILDDIR)/$*.$(DEPEXT).tmp
 	@sed -e 's|.*:|$(BUILDDIR)/$*.$(OBJEXT):|' < $(BUILDDIR)/$*.$(DEPEXT).tmp > $(BUILDDIR)/$*.$(DEPEXT)
