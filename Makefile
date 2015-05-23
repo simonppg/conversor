@@ -28,6 +28,12 @@ SOURCES     := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
 M_RULES		:= $(shell find $(SRCDIR) -type f -name *.$(RMEXT))
 
+FILE = $(M_RULES)
+VARIABLE=`cat $(FILE)`
+
+mrules:
+	echo $(VARIABLE)
+
 #Defauilt Make
 all: resources $(TARGET)
 
