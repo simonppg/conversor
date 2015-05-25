@@ -1,3 +1,3 @@
 MYSQLFLAGS 	= `mysql_config --cflags --libs`
-CFLAGS 	= $(MYSQLFLAGS)
-LIB 	= $(MYSQLFLAGS)
+$(BUILDDIR)/%.$(OBJEXT):  CFLAGS+= $(MYSQLFLAGS)
+$(TARGET): LIB += $(MYSQLFLAGS)
