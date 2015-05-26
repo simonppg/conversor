@@ -28,9 +28,6 @@ SOURCES     := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
 M_RULES		:= $(shell find $(SRCDIR) -type f -name *.$(RMEXT))
 
-FILE = $(M_RULES)
-VARIABLE=`cat $(FILE)`
-
 #Defauilt Make
 all: resources $(TARGET)
 
@@ -72,9 +69,6 @@ $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 	@sed -e 's|.*:|$(BUILDDIR)/$*.$(OBJEXT):|' < $(BUILDDIR)/$*.$(DEPEXT).tmp > $(BUILDDIR)/$*.$(DEPEXT)
 	@sed -e 's/.*://' -e 's/\\$$//' < $(BUILDDIR)/$*.$(DEPEXT).tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(BUILDDIR)/$*.$(DEPEXT)
 	@rm -f $(BUILDDIR)/$*.$(DEPEXT).tmp
-	
-mrules:
-	echo $(VARIABLE)
 
 #Non-File Targets
 .PHONY: all remake clean cleaner resources
