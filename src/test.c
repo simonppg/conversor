@@ -1,5 +1,5 @@
 #include <stdio.h>
-//#include "frecuencia.h"
+#include "frecuencia/frecuencia.h"
 
 int main(int argc, char const *argv[])
 {
