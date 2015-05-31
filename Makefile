@@ -17,7 +17,7 @@ RMEXT		:= mk
 
 #Flags, Libraries and Includes
 CFLAGS      := -Wall -g
-LIB         := 
+LIBS        := 
 INC         := -I$(INCDIR) -I/usr/local/include
 INCDEP      := -I$(INCDIR)
 
@@ -58,7 +58,7 @@ cleaner: clean
 
 #Link
 $(TARGET): $(OBJECTS)
-	$(CC) -o $(TARGETDIR)/$(TARGET) $^ $(LIB)
+	$(CC) -o $(TARGETDIR)/$(TARGET) $^ $(LIBS)
 
 #Compile
 $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
