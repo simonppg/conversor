@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "frecuencia/frecuencia.h"
+#include "datatype.h"
 
 int main(int argc, char const *argv[])
 {
